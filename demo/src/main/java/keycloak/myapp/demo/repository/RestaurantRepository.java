@@ -1,12 +1,10 @@
 package keycloak.myapp.demo.repository;
 
 import keycloak.myapp.demo.entity.MenuItem;
+import keycloak.myapp.demo.entity.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
-    List<MenuItem> findAllByMenuId(Long id);
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 }
