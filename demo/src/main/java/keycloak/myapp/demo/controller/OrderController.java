@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,21 @@ public class OrderController {
 
     @GetMapping("/{restaurtantId}/list")
     public ResponseEntity<List<Order>> getOrders(@PathVariable Long restaurantId) {
-        return ResponseEntity.ok(this.orderRepository.findByRestaurantId(restaurantId));
+        List<Order> orders = new ArrayList<>();
+        Order order = new Order();
+        order.setId(restaurantId);
+        order.setRestaurantId(restaurantId);
+        List<OrderItem> orderItems = new ArrayList<>();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setId(restaurantId);
+        orderItem.setOrderId(order.getId());
+        orderItems.add(orderItem);
+        order.setOrderItems(orderItems);
+        orders.add(order);
+        return ResponseEntity.ok(
+                orders
+                //this.orderRepository.findByRestaurantId(restaurantId)
+        );
     }
 
     @GetMapping("/{orderId}")
