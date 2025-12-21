@@ -17,7 +17,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> {
                     a.anyRequest().authenticated();
                 }).oauth2ResourceServer(o -> {
-                    o.jwt(Customizer.withDefaults());
+                    //o.jwt(Customizer.withDefaults());
+                    o.opaqueToken(Customizer.withDefaults());
                 }).sessionManagement(
                     s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
