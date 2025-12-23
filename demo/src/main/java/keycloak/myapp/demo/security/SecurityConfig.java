@@ -10,36 +10,49 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(t -> t.disable())
                 .authorizeHttpRequests(a -> {
-                    a.anyRequest().authenticated();
-//                    a.requestMatchers(HttpMethod.GET, "/restaurant/**").permitAll()
-//                    .requestMatchers(HttpMethod.GET, "/order/**").permitAll()
-//                            .anyRequest().authenticated();
+//                    a.anyRequest().authenticated();
+                    a.requestMatchers(HttpMethod.GET, "/restaurant/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/order/**").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                            .anyRequest().authenticated();
                 }).oauth2ResourceServer(o -> {
-                    //o.jwt(Customizer.withDefaults());
+                    o.jwt(Customizer.withDefaults());
                     //o.jwt(configurer -> configurer.jwtAuthenticationConverter(this.jwtAuthConverter));
-                    o.opaqueToken(Customizer.withDefaults());
+                    //o.opaqueToken(Customizer.withDefaults());
                 }).sessionManagement(
                     s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
         return http.build();
     }
 
-//    @Bean
-//    public DefaultMethodSecurityExpressionHandler mSecurity() {
-//        DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler =
-//                new DefaultMethodSecurityExpressionHandler();
-//        defaultMethodSecurityExpressionHandler.setDefaultRolePrefix("");
-//        return defaultMethodSecurityExpressionHandler;
-//    }
+    @Bean
+    public DefaultMethodSecurityExpressionHandler mSecurity() {
+        DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler =
+                new DefaultMethodSecurityExpressionHandler();
+        defaultMethodSecurityExpressionHandler.setDefaultRolePrefix("");
+        return defaultMethodSecurityExpressionHandler;
+    }
+
+    @Bean
+    public JwtAuthenticationConverter converter() {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix(""); //Default "SCOPE"
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles"); //Default "scope" OR "scp"
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
 }

@@ -19,7 +19,7 @@ public class OrderController {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-    @GetMapping("/{restaurtantId}/list")
+    @GetMapping("/{restaurantId}/list")
     public ResponseEntity<List<Order>> getOrders(@PathVariable Long restaurantId) {
         List<Order> orders = new ArrayList<>();
         Order order = new Order();

@@ -1,5 +1,6 @@
 package keycloak.myapp.demo.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import keycloak.myapp.demo.entity.Menu;
 import keycloak.myapp.demo.entity.MenuItem;
 import keycloak.myapp.demo.entity.Restaurant;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurant")
+@SecurityRequirement(name = "Keycloak")
 public class RestaurantController {
     @Autowired
     private RestaurantRepository restaurantRepository;
